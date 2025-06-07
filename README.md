@@ -1,2 +1,2 @@
 # MRI-MoCoCo
-MRI Motion Correction Comparison 
+MRI Motion Correction Techniques Comparison 
