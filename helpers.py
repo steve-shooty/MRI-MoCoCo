@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from ipywidgets import interact
+from ipywidgets import interact, IntSlider
 import numpy as np
 import SimpleITK as sitk
 import cv2
@@ -52,6 +52,50 @@ def explore_3D_array_comparison(arr_before: np.ndarray, arr_after: np.ndarray, c
   
   interact(fn, SLICE=(0, arr_before.shape[0]-1))
 
+
+def explore_3D_array_comparison_and_diff(arr_before: np.ndarray, arr_after: np.ndarray, cmap: str = 'gray'):
+    """
+    Given two 3D arrays with shape (Z,X,Y) this function will create an interactive
+    widget to check out all the 2D arrays with shape (X,Y) inside the 3D arrays.
+    The purpose of this function to visual compare the 2D arrays and their difference.
+
+    Args:
+      arr_before : 3D array with shape (Z,X,Y) that represents the volume of a MRI image, before any transform
+      arr_after : 3D array with shape (Z,X,Y) that represents the volume of a MRI image, after some transform
+      cmap : Which color map use to plot the slices in matplotlib.pyplot
+    """
+    assert arr_after.shape == arr_before.shape, "Die beiden Arrays müssen die gleiche Form haben."
+
+    # Berechne das Differenz-Array einmal im Voraus für bessere Performance
+    diff_arr = np.absolute(arr_before - arr_after)
+
+    # Die Funktion, die bei jeder Slider-Änderung aufgerufen wird
+    def fn(SLICE):
+        # Erstelle eine Figur mit 1 Zeile und 3 Spalten für die Plots
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, sharex='col', sharey='row', figsize=(15, 7))
+
+        # Plot 1: Bild "Vorher"
+        ax1.set_title('Before', fontsize=15)
+        im1 = ax1.imshow(arr_before[SLICE, :, :], cmap=cmap)
+        ax1.axis('off')
+
+        # Plot 2: Bild "Nachher"
+        ax2.set_title('After', fontsize=15)
+        im2 = ax2.imshow(arr_after[SLICE, :, :], cmap=cmap)
+        ax2.axis('off')
+        
+        # Plot 3: Differenzbild
+        ax3.set_title('Difference (Absolute)', fontsize=15)
+        # Wir verwenden eine andere Colormap ('magma' oder 'hot'), um Unterschiede hervorzuheben.
+        # Schwarz = kein Unterschied, Helle Farben = großer Unterschied.
+        im3 = ax3.imshow(diff_arr[SLICE, :, :], cmap='magma')
+        ax3.axis('off')
+
+        plt.tight_layout()
+        plt.show()
+    
+    # Erstelle den interaktiven Slider
+    interact(fn, SLICE=IntSlider(min=0, max=arr_before.shape[0]-1, step=1, value=arr_before.shape[0]//2, description='Slice:'))
 
 def show_sitk_img_info(img: sitk.Image):
   """
