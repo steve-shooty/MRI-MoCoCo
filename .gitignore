@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-/MRI-Datasets
+/DCE_codeset/MRI-Datasets/
 /groupregnet_dce_output
 
 # User-specific files (MonoDevelop/Xamarin Studio)
