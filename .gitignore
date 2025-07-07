@@ -11,6 +11,8 @@
 *.sln.docstates
 /DCE_codeset/MRI-Datasets/
 /MEDCIC_07_codeset/MRI-Datasets/
+/MEDCIC_07_codeset/MEDCIC_07_codeset
+DCE_codeset/DCE_codeset/
 /groupregnet_dce_output
 
 # User-specific files (MonoDevelop/Xamarin Studio)
