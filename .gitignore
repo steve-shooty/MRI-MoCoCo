@@ -9,15 +9,15 @@
 *.user
 *.userosscache
 *.sln.docstates
-/DCE_codeset/MRI-Datasets/
-/MEDCIC_07_codeset/MRI-Datasets/
-/MEDCIC_07_codeset/MEDCIC_07_codeset
-DCE_codeset/DCE_codeset/
-/groupregnet_dce_output
-/ready_to_use/displacement_fields.zarr
-/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/MRI-Datasets/*
-/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/warped_images.zarr/*
-/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/displacement_fields.zarr/*
+/DCE_codeset/
+/MEDCIC_07_codeset/
+/groupregnet_dce_output/
+
+# Ignoriere bestimmte Unterordner und Dateien im Ordner "ready_to_use"
+/ready_to_use/MRI-Datasets/
+/ready_to_use/displacement_fields.zarr/
+/ready_to_use/warped_images.*
+/ready_to_use/displacement_fields.*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
