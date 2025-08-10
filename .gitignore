@@ -14,6 +14,10 @@
 /MEDCIC_07_codeset/MEDCIC_07_codeset
 DCE_codeset/DCE_codeset/
 /groupregnet_dce_output
+/ready_to_use/displacement_fields.zarr
+/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/MRI-Datasets/*
+/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/warped_images.zarr/*
+/mnt/dev_rep/repos/MRI-MoCoCo/ready_to_use/displacement_fields.zarr/*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -409,3 +413,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
