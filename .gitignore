@@ -12,12 +12,16 @@
 /DCE_codeset/
 /MEDCIC_07_codeset/
 /groupregnet_dce_output/
+/DCE_codeset/MRI-Datasets
+/DCE_codeset/MRI_Data
 
 # Ignoriere bestimmte Unterordner und Dateien im Ordner "ready_to_use"
 /ready_to_use/MRI-Datasets/
 /ready_to_use/displacement_fields.zarr/
 /ready_to_use/warped_images.*
 /ready_to_use/displacement_fields.*
+/ready_to_use/input_zarr_for_mdreg_parallel_*
+/ready_to_use/path/to/your
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
