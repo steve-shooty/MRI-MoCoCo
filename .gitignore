@@ -22,6 +22,7 @@
 /ready_to_use/displacement_fields.*
 /ready_to_use/input_zarr_for_mdreg_parallel_*
 /ready_to_use/path/to/your
+/ready_to_use/Raw_Datasets
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
