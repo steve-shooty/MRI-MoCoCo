@@ -13,6 +13,7 @@
 /MEDCIC_07_codeset/
 /groupregnet_dce_output/
 /DCE_codeset/
+/ready_to_use/159*
 
 # Ignoriere bestimmte Unterordner und Dateien im Ordner "ready_to_use"
 /ready_to_use/MRI-Datasets/
