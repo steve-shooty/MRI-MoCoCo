@@ -4,6 +4,8 @@ from ipywidgets import interact, IntSlider
 import numpy as np
 import SimpleITK as sitk
 import cv2
+import os
+import pydicom
 
 def explore_3D_array(arr: np.ndarray, cmap: str = 'gray'):
   """
@@ -229,3 +231,51 @@ def explore_orthogonal_views(arr: np.ndarray, metadata: dict, cmap: str = 'gray'
         y_slice=IntSlider(min=0, max=max_y, step=1, value=max_y // 2, description='Coronal (Y):'),
         x_slice=IntSlider(min=0, max=max_x, step=1, value=max_x // 2, description='Sagittal (X):')
     )
+    
+def get_scan_time_parameters(dicom_folder):
+  """
+  Ermittelt automatisch die zeitliche Auflösung und die Anzahl der Zeitpunkte
+  aus einem Ordner mit DICOM-Dateien.
+  Args:
+      dicom_folder (str): Der Pfad zum Ordner mit den DICOM-Dateien.
+  Returns:
+      tuple: Ein Tupel mit (time_resolution_seconds, num_time_points).
+             Gibt (None, None) zurück, wenn die Daten nicht ermittelt werden können.
+  """
+  print(f"Analysiere DICOM-Header in: {dicom_folder}...")
+  
+  time_points_ms = []
+  files = [os.path.join(dicom_folder, f) for f in os.listdir(dicom_folder) if f.endswith('.dcm')]
+  if not files:
+      print("FEHLER: Kein DICOM-Dateien im Ordner gefunden.")
+      return None, None
+  for file_path in files:
+      try:
+          # Lese nur den Header, nicht die teuren Bild-Pixel
+          dcm_header = pydicom.dcmread(file_path, stop_before_pixels=True)
+          
+          # TriggerTime (0018,1060) ist der häufigste Tag für die Zeit in dynamischen Serien
+          if 'TriggerTime' in dcm_header:
+              time_points_ms.append(float(dcm_header))
+      except Exception as e:
+          print(f"Warnung: Konnte Datei {file_path} nicht lesen oder Tag nicht finden. Überspringe. Fehler: {e}")
+  if not time_points_ms:
+      print("FEHLER: Konnte in keiner DICOM-Datei den 'TriggerTime'-Tag finden.")
+      print("Alternative Tags könnten 'AcquisitionTime' sein, dies erfordert aber eine Anpassung.")
+      return None, None
+  # Finde die einzigartigen Zeitpunkte und sortiere sie
+  unique_times = sorted(np.unique(time_points_ms))
+  
+  # 1. Ermittle die Gesamtanzahl der Zeitpunkte
+  num_time_points = len(unique_times)
+  
+  # 2. Ermittle die zeitliche Auflösung
+  if num_time_points > 1:
+      # Differenz zwischen den ersten beiden Zeitpunkten in Millisekunden
+      time_diff_ms = unique_times[1] - unique_times[0]
+      # Umrechnung in Sekunden
+      time_resolution_seconds = time_diff_ms / 1000.0
+  else:
+      # Fallback, falls nur ein Zeitpunkt gefunden wird
+      time_resolution_seconds = 0.0
+  return time_resolution_seconds, num_time_points
