@@ -15,6 +15,7 @@
 /DCE_codeset/
 /ready_to_use/159*
 /ready_to_use/temp*
+/ready_to_use/korr*
 
 # Ignoriere bestimmte Unterordner und Dateien im Ordner "ready_to_use"
 /ready_to_use/MRI-Datasets/
