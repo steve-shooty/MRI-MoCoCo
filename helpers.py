@@ -66,35 +66,27 @@ def explore_3D_array_comparison_and_diff(arr_before: np.ndarray, arr_after: np.n
     """
     assert arr_after.shape == arr_before.shape, "Die beiden Arrays müssen die gleiche Form haben."
 
-    # Berechne das Differenz-Array einmal im Voraus für bessere Performance
     diff_arr = np.absolute(arr_before - arr_after)
 
-    # Die Funktion, die bei jeder Slider-Änderung aufgerufen wird
     def fn(SLICE):
-        # Erstelle eine Figur mit 1 Zeile und 3 Spalten für die Plots
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, sharex='col', sharey='row', figsize=(15, 7))
 
-        # Plot 1: Bild "Vorher"
         ax1.set_title('Before', fontsize=15)
         im1 = ax1.imshow(arr_before[SLICE, :, :], cmap=cmap)
         ax1.axis('off')
 
-        # Plot 2: Bild "Nachher"
         ax2.set_title('After', fontsize=15)
         im2 = ax2.imshow(arr_after[SLICE, :, :], cmap=cmap)
         ax2.axis('off')
-        
-        # Plot 3: Differenzbild
+
         ax3.set_title('Difference (Absolute)', fontsize=15)
-        # Wir verwenden eine andere Colormap ('magma' oder 'hot'), um Unterschiede hervorzuheben.
-        # Schwarz = kein Unterschied, Helle Farben = großer Unterschied.
+
         im3 = ax3.imshow(diff_arr[SLICE, :, :], cmap='magma')
         ax3.axis('off')
 
         plt.tight_layout()
         plt.show()
-    
-    # Erstelle den interaktiven Slider
+
     interact(fn, SLICE=IntSlider(min=0, max=arr_before.shape[0]-1, step=1, value=arr_before.shape[0]//2, description='Slice:'))
 
 def explore_3D_array_comparison_with_diff(
@@ -116,46 +108,38 @@ def explore_3D_array_comparison_with_diff(
     """
     assert arr1.shape == arr2.shape == arr3.shape, "Alle drei Arrays müssen exakt die gleiche Form haben."
 
-    # Berechne das Differenz-Array zwischen dem mittleren und rechten Bild
     diff_arr = np.absolute(arr2 - arr3)
 
-    # Die Funktion, die bei jeder Slider-Änderung aufgerufen wird
     def fn(SLICE):
-        # Erstelle eine Figur mit 1 Zeile und 4 Spalten für die Plots
         fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, sharex='col', sharey='row', figsize=(20, 7))
 
-        # Plot 1: Bild 1 (links)
         ax1.set_title('Image 1 (Left)', fontsize=15)
         ax1.imshow(arr1[SLICE, :, :], cmap=cmap)
         ax1.axis('off')
 
-        # Plot 2: Bild 2 (mitte)
         ax2.set_title('Image 2 (Middle)', fontsize=15)
         ax2.imshow(arr2[SLICE, :, :], cmap=cmap)
         ax2.axis('off')
-        
-        # Plot 3: Bild 3 (rechts)
+
         ax3.set_title('Image 3 (Right)', fontsize=15)
         ax3.imshow(arr3[SLICE, :, :], cmap=cmap)
         ax3.axis('off')
 
-        # Plot 4: Differenzbild zwischen Bild 2 und 3
         ax4.set_title('Difference (|Middle - Right|)', fontsize=15)
-        im4 = ax4.imshow(diff_arr[SLICE, :, :], cmap='magma') # 'magma' hebt Unterschiede gut hervor
+        im4 = ax4.imshow(diff_arr[SLICE, :, :], cmap='magma') 
         ax4.axis('off')
 
         plt.tight_layout()
         plt.show()
-    
-    # Erstelle den interaktiven Slider
+
     interact(fn, SLICE=IntSlider(min=0, max=arr1.shape[0]-1, step=1, value=arr1.shape[0]//2, description='Slice:'))
 
 def plot_time_sequence_comparison(
     arr1: np.ndarray, 
     arr2: np.ndarray, 
     t_start: int, 
-    num_frames: int = 20, # Anzahl der anzuzeigenden Zeitpunkte
-    *, # Erzwingt Keyword-Argumente für Folgendes
+    num_frames: int = 20,
+    *, 
     cmap: str = 'gray', 
     diff_cmap: str = 'inferno' 
 ):
@@ -176,25 +160,22 @@ def plot_time_sequence_comparison(
     assert arr1.ndim == 3, "Eingabearrays müssen 3-dimensional sein (T, H, W)."
     
     T, H, W = arr1.shape
-    t_end = min(t_start + num_frames, T) # Stelle sicher, nicht über das Ende hinauszugehen
-    actual_frames = t_end - t_start # Tatsächliche Anzahl der Frames
+    t_end = min(t_start + num_frames, T)
+    actual_frames = t_end - t_start
 
     if actual_frames <= 0:
         print(f"FEHLER: Startzeitpunkt {t_start} liegt außerhalb der gültigen Zeitreihe (Länge {T}).")
         return
 
-    # Erstelle eine Figur mit `actual_frames` Zeilen und 3 Spalten
     fig, axes = plt.subplots(actual_frames, 3, figsize=(15, 3 * actual_frames), 
                              sharex=True, sharey=True)
-    
-    # Stelle sicher, dass 'axes' immer ein 2D-Array ist
+
     if actual_frames == 1:
         axes = axes.reshape(1, -1)
 
     fig.suptitle(f"Vergleich von Zeitpunkten {t_start} bis {t_end-1}", fontsize=16, y=1.0)
     print(f"Zeige {actual_frames} Zeitpunkte von {t_start} bis {t_end-1} an...")
 
-    # Max-Wert für Differenzbilder finden für konsistente Skalierung
     max_diff_overall = 0
     diffs = []
     for i in range(actual_frames):
@@ -207,7 +188,6 @@ def plot_time_sequence_comparison(
         if current_max > max_diff_overall:
             max_diff_overall = current_max
 
-    # Durchlaufe die Zeitpunkte und fülle die Subplots
     for i in range(actual_frames):
         t = t_start + i
         
@@ -215,39 +195,30 @@ def plot_time_sequence_comparison(
         slice2 = arr2[t, :, :]
         diff_slice = diffs[i]
 
-        # --- Spalten definieren ---
-        # Spalte 1: arr1
         axes[i, 0].imshow(slice1, cmap=cmap)
-        axes[i, 0].set_ylabel(f'Time {t}', fontsize=12) # Zeitlabel nur links
+        axes[i, 0].set_ylabel(f'Time {t}', fontsize=12) 
 
-        # Spalte 2: arr2
         axes[i, 1].imshow(slice2, cmap=cmap)
 
-        # Spalte 3: Differenz |arr1 - arr2|
         im_diff = axes[i, 2].imshow(diff_slice, cmap=diff_cmap, vmin=0, vmax=max_diff_overall)
 
-        # Titel nur für die erste Zeile setzen
         if i == 0:
             axes[i, 0].set_title('Array 1', fontsize=14)
             axes[i, 1].set_title('Array 2', fontsize=14)
             axes[i, 2].set_title('|Array 1 - Array 2|', fontsize=14)
-            
-        # Achsenbeschriftungen entfernen
+
         for j in range(3):
             axes[i, j].set_xticks([])
             axes[i, j].set_yticks([])
 
-    plt.subplots_adjust(wspace=0.05, hspace=0.05, top=0.95) # Geringer Abstand
+    plt.subplots_adjust(wspace=0.05, hspace=0.05, top=0.95)
     plt.show()
 
-# %% Beispiel zur Anwendung
 
-# Erstelle Dummy-Daten im Format (T, H, W)
-T, H, W = 50, 128, 128 # Beispiel-Dimensionen
 dummy_arr1 = np.zeros((T, H, W), dtype=np.uint8)
 dummy_arr2 = np.zeros((T, H, W), dtype=np.uint8)
 
-# Zeichne einfache Formen
+
 y, x = np.ogrid[-H//2:H//2, -W//2:W//2]
 radius = 30
 for t in range(T):
@@ -258,8 +229,7 @@ for t in range(T):
     dummy_arr1[t, :, :][mask1] = 200 
     dummy_arr2[t, :, :][mask2] = 200
 
-# --- Rufe die Funktion auf ---
-# Beispiel: Zeige die Bilder von Zeitpunkt 5 bis 24 an
+
 start_time_index = 5 
 plot_time_sequence_comparison(dummy_arr1, dummy_arr2, t_start=start_time_index, num_frames=20)
 
