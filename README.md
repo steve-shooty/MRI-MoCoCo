@@ -1,3 +1,3 @@
 # MRI-MoCoCo
 MRI Motion Correction Techniques Comparison 
-\nMotion Correction Coregistration
+Motion Correction Coregistration
